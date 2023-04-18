@@ -1,0 +1,3 @@
+class Touch extends GameObject{
+
+}

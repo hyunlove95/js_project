@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{margin: 0px;}
+        #wrapper{
+            width: 707px;
+            height:705px;
+            margin:auto;
+            position: relative;            
+        }
+        #result{
+            width:280px;
+            height:100%;
+            background-color: pink;
+            position: absolute;
+            left:428px;
+            text-align: center;
+            padding-top:300px;
+            box-sizing: border-box;
+        }
+    </style>
+    <script src="./classes/GameObject.js"></script>
+    <script src="./classes/GameMap.js"></script>
+    <script src="./classes/Lane.js"></script>
+    <script src="./classes/Touch.js"></script>
+    <script src="./classes/Note.js"></script>
+    <script src="./lib/util.js"></script>
+    <script>
+        let wrapper;
+        let gameFlag = false;     // 게임 실행, 정지 논리값
+        let audio;                      // mp3 변수
+        let gameMap;
+        let wKey = false, eKey = false, rKey = false, iKey = false, oKey = false, pKey = false;         // 키 이벤트
+        let perfect_score, great_score, miss_score;
+
+        function createStyle(){     // container, x, y, width, height, velY, background
+            //constructor(container, color, src, x, y, width, height,velX, velY)
+            gameMap = new GameMap(wrapper,"brown","" , 0, 0,427,705,0,0);
+        }
+        
+        // 음악 재생, 일시정지 및 게임 일시정지
+        function musicControl(){
+            gameFlag = !gameFlag;
+            if(audio.paused){   // 음악의 시작,정지 상태확인
+                audio.play();
+            }
+            else{
+                audio.pause();
+            }
+        }
+        
+        function gameLoop(){
+            if(gameFlag){
+                gameMap.tick();
+            }
+            
+            setTimeout("gameLoop()", 10);
+        }
+        
+        function wkeyboardEvent(){
+            wKey = true;
+        }
+        function ekeyboardEvent(){
+            eKey = true;
+        }
+        function rkeyboardEvent(){
+            rKey = true;
+        }
+        function ikeyboardEvent(){
+            iKey = true;
+        }
+        function okeyboardEvent(){
+            oKey = true;
+        }
+        function pkeyboardEvent(){
+            pKey = true;
+        }
+
+        function init(){
+            wrapper = document.getElementById("wrapper");
+            perfect_score = document.getElementById("perfect_score");
+            perfect_score.innerText = parseInt(0);
+            great_score = document.getElementById("great_score");
+            great_score.innerText = parseInt(0);
+            miss_score = document.getElementById("miss_score");
+            miss_score.innerText = parseInt(0);
+
+            
+            audio = new Audio("./song/Riding Into The Sun.mp3");
+            //audio = new Audio("./song/Everlasting_Message.mp3");
+            //audio = new Audio("./song/Lachryma.mp3");
+            createStyle();
+            gameLoop();
+
+            document.body.addEventListener("keydown", function(e){
+                switch(e.keyCode){
+                    case 87: wkeyboardEvent();break; // w
+                    case 69: ekeyboardEvent();break;  // e
+                    case 82: rkeyboardEvent();break;  // r
+                    case 73: ikeyboardEvent();break;  // i
+                    case 79: okeyboardEvent();break;  // o
+                    case 80: pkeyboardEvent();break;  // p
+                }
+            });
+        }
+
+        window.addEventListener("load", function(){
+            init();
+        });
+    </script>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="result">
+            <button onClick="musicControl()">시작</button> <br>
+            <p></p>
+            Perfect: <span id="perfect_score">0</span> <br>
+            Great : <span id="great_score">0</span> <br>
+            Miss : <span id="miss_score">0</span>
+        </div>
+    </div>
+</body>
+</html>
